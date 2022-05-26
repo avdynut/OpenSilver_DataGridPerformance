@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32519.111
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataGridPerfromance.Browser", "DataGridPerfromance.Browser\DataGridPerfromance.Browser.csproj", "{8ABF3242-DBEC-42B1-B615-B30FA4DE9F20}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataGridPerfromance.Simulator", "DataGridPerfromance.Simulator\DataGridPerfromance.Simulator.csproj", "{4355FECF-6B9D-4727-9BE5-C382FC8E83F2}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataGridPerfromance.OpenSilver", "DataGridPerfromance\DataGridPerfromance.OpenSilver.csproj", "{129D0B8C-40B3-4B2F-A539-FFB047CF9148}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8ABF3242-DBEC-42B1-B615-B30FA4DE9F20}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8ABF3242-DBEC-42B1-B615-B30FA4DE9F20}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8ABF3242-DBEC-42B1-B615-B30FA4DE9F20}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8ABF3242-DBEC-42B1-B615-B30FA4DE9F20}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4355FECF-6B9D-4727-9BE5-C382FC8E83F2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4355FECF-6B9D-4727-9BE5-C382FC8E83F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4355FECF-6B9D-4727-9BE5-C382FC8E83F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4355FECF-6B9D-4727-9BE5-C382FC8E83F2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{129D0B8C-40B3-4B2F-A539-FFB047CF9148}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{129D0B8C-40B3-4B2F-A539-FFB047CF9148}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{129D0B8C-40B3-4B2F-A539-FFB047CF9148}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{129D0B8C-40B3-4B2F-A539-FFB047CF9148}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {AE0A45FF-5A1E-4D34-A576-026ECEDF0660}
+	EndGlobalSection
+EndGlobal

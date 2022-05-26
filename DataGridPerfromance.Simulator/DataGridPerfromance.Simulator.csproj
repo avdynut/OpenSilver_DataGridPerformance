@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<OutputType>WinExe</OutputType>
+		<TargetFramework>net472</TargetFramework>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="OpenSilver.Simulator" Version="1.0.0-private-2022-05-23-121732-65aefd7f" />
+		<PackageReference Include="System.ComponentModel.Annotations" Version="6.0.0-preview.4.21253.7" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\DataGridPerfromance\DataGridPerfromance.OpenSilver.csproj" />
+	</ItemGroup>
+
+</Project>

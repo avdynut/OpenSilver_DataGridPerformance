@@ -4,6 +4,9 @@ using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+#if OPENSILVER
+using System.Diagnostics;
+#endif
 
 namespace DataGridPerfromance
 {
