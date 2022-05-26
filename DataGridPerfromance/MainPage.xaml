@@ -12,6 +12,7 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
             <ColumnDefinition/>
+            <ColumnDefinition/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -20,7 +21,7 @@
         <TextBox Name="CountTextBox"
                  Grid.Row="0"
                  Grid.Column="0"
-                 Grid.ColumnSpan="2"
+                 Grid.ColumnSpan="3"
                  MinWidth="200"
                  HorizontalAlignment="Center"
                  Text="50"/>
@@ -37,7 +38,7 @@
             <Button Grid.Row="1"
                     HorizontalAlignment="Center"
                     Click="Button_Click"
-                    Content="Refresh"/>
+                    Content="Load"/>
             <TextBlock x:Name="ListTime"
                        Grid.Row="2"
                        HorizontalAlignment="Center"
@@ -61,16 +62,44 @@
             </Grid.RowDefinitions>
             <TextBlock Grid.Row="0"
                        HorizontalAlignment="Center"
-                       Text="CollectionView"/>
+                       Text="CollectionView Observable"/>
             <Button Grid.Row="1"
                     HorizontalAlignment="Center"
                     Click="Button_Click_1"
-                    Content="Refresh"/>
+                    Content="Load"/>
             <TextBlock x:Name="CollectionViewTime"
                        Grid.Row="2"
                        HorizontalAlignment="Center"
                        Text=" "/>
             <sdk:DataGrid x:Name="CollectionViewDataGrid"
+                          Grid.Row="3"
+                          AutoGenerateColumns="False">
+                <sdk:DataGrid.Columns>
+                    <sdk:DataGridTextColumn Binding="{Binding Name}" Header="Name"/>
+                    <sdk:DataGridTextColumn Binding="{Binding Number}" Header="Number"/>
+                </sdk:DataGrid.Columns>
+            </sdk:DataGrid>
+        </Grid>
+
+        <Grid Grid.Row="1" Grid.Column="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <TextBlock Grid.Row="0"
+                       HorizontalAlignment="Center"
+                       Text="CollectionView List + Refresh()"/>
+            <Button Grid.Row="1"
+                    HorizontalAlignment="Center"
+                    Click="Button_Click_2"
+                    Content="Load"/>
+            <TextBlock x:Name="CollectionViewListTime"
+                       Grid.Row="2"
+                       HorizontalAlignment="Center"
+                       Text=" "/>
+            <sdk:DataGrid x:Name="CollectionViewListDataGrid"
                           Grid.Row="3"
                           AutoGenerateColumns="False">
                 <sdk:DataGrid.Columns>
