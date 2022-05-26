@@ -12,30 +12,31 @@ namespace DataGridPerfromance
 {
     public partial class MainPage : UserControl
     {
-        private ObservableCollection<Item> _items = new ObservableCollection<Item>();
-        private ObservableCollection<Item> _items2 = new ObservableCollection<Item>();
+        private List<Item> _items = new List<Item>();
+        private List<Item> _items2 = new List<Item>();
         private CollectionViewSource _collectionViewSource;
         private ICollectionView _collectionView => _collectionViewSource.View;
 
         public MainPage()
         {
             InitializeComponent();
-
-            MyDataGrid.ItemsSource = _items;
+            
             _collectionViewSource = new CollectionViewSource { Source = _items2 };
             // _collectionView.SortDescriptions.Add(new SortDescription("Count", ListSortDirection.Ascending));
-            CollectionViewDataGrid.ItemsSource = _collectionView;
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            MyDataGrid.ItemsSource = null;
             RefreshCollection(_items, ListTime);
+            MyDataGrid.ItemsSource = _items;
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
+            CollectionViewDataGrid.ItemsSource = null;
             RefreshCollection(_items2, CollectionViewTime);
-
+            CollectionViewDataGrid.ItemsSource = _collectionView;
             //_collectionView.Refresh();
         }
 
