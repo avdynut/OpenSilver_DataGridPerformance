@@ -1,20 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Animation;
-using System.Windows.Shapes;
+#if OPENSILVER
+using System.Diagnostics;
+using System.IO;
+#endif
 
 namespace DataGridPerfromance
 {
     public partial class App : Application
     {
-
         public App()
         {
             this.Startup += this.Application_Startup;
@@ -22,6 +16,18 @@ namespace DataGridPerfromance
             this.UnhandledException += this.Application_UnhandledException;
 
             InitializeComponent();
+
+#if OPENSILVER
+            Trace.Listeners.Add(new TextWriterTraceListener(Console.Out));
+            Trace.AutoFlush = true;
+
+            if (OpenSilver.Interop.IsRunningInTheSimulator)
+            {
+                var logsFolder = "Logs";
+                Directory.CreateDirectory(logsFolder);
+                Trace.Listeners.Add(new TextWriterTraceListener(Path.Combine(logsFolder, $"{DateTime.Today:yyyy-MM-dd}.log")));
+            }
+#endif
         }
 
         private void Application_Startup(object sender, StartupEventArgs e)
