@@ -1,12 +1,83 @@
 ﻿<UserControl x:Class="DataGridPerfromance.MainPage"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d"
-    d:DesignHeight="300" d:DesignWidth="400">
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:sdk="http://schemas.microsoft.com/winfx/2006/xaml/presentation/sdk"
+             d:DesignHeight="300"
+             d:DesignWidth="400"
+             mc:Ignorable="d">
 
-    <Grid x:Name="LayoutRoot" Background="White">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <TextBox Name="CountTextBox"
+                 Grid.Row="0"
+                 Grid.Column="0"
+                 Grid.ColumnSpan="2"
+                 MinWidth="200"
+                 HorizontalAlignment="Center"
+                 Text="50"/>
+        <Grid Grid.Row="1" Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <TextBlock Grid.Row="0"
+                       HorizontalAlignment="Center"
+                       Text="ObservableCollection"/>
+            <Button Grid.Row="1"
+                    HorizontalAlignment="Center"
+                    Click="Button_Click"
+                    Content="Refresh"/>
+            <TextBlock x:Name="ListTime"
+                       Grid.Row="2"
+                       HorizontalAlignment="Center"
+                       Text=" "/>
+            <sdk:DataGrid x:Name="MyDataGrid"
+                          Grid.Row="3"
+                          AutoGenerateColumns="False">
+                <sdk:DataGrid.Columns>
+                    <sdk:DataGridTextColumn Binding="{Binding Name}" Header="Name"/>
+                    <sdk:DataGridTextColumn Binding="{Binding Number}" Header="Number"/>
+                </sdk:DataGrid.Columns>
+            </sdk:DataGrid>
+        </Grid>
 
+        <Grid Grid.Row="1" Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <TextBlock Grid.Row="0"
+                       HorizontalAlignment="Center"
+                       Text="CollectionView"/>
+            <Button Grid.Row="1"
+                    HorizontalAlignment="Center"
+                    Click="Button_Click_1"
+                    Content="Refresh"/>
+            <TextBlock x:Name="CollectionViewTime"
+                       Grid.Row="2"
+                       HorizontalAlignment="Center"
+                       Text=" "/>
+            <sdk:DataGrid x:Name="CollectionViewDataGrid"
+                          Grid.Row="3"
+                          AutoGenerateColumns="False">
+                <sdk:DataGrid.Columns>
+                    <sdk:DataGridTextColumn Binding="{Binding Name}" Header="Name"/>
+                    <sdk:DataGridTextColumn Binding="{Binding Number}" Header="Number"/>
+                </sdk:DataGrid.Columns>
+            </sdk:DataGrid>
+        </Grid>
     </Grid>
 </UserControl>
