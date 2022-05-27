@@ -15,7 +15,7 @@ namespace DataGridPerfromance
     {
         private ObservableCollection<Item> _items = new ObservableCollection<Item>();
         private ObservableCollection<Item> _items2 = new ObservableCollection<Item>();
-        private List<Item> _items3 = new List<Item>();
+        private ObservableCollection<Item> _items3 = new ObservableCollection<Item>();
         private ICollectionView _collectionView;
         private ICollectionView _collectionView2;
 
@@ -27,9 +27,8 @@ namespace DataGridPerfromance
 
             _collectionView = new CollectionViewSource { Source = _items2 }.View;
             // _collectionView.SortDescriptions.Add(new SortDescription("Number", ListSortDirection.Ascending));
-            CollectionViewDataGrid.ItemsSource = _collectionView;
 
-            _collectionView2 = new CollectionViewSource { Source = _items3 }.View;
+            _collectionView2 = new CollectionViewSource { Source = new Collection<Item>(_items3) }.View;
             CollectionViewListDataGrid.ItemsSource = _collectionView2;
         }
 
@@ -40,7 +39,8 @@ namespace DataGridPerfromance
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            RefreshCollection(_items2, CollectionViewTime);
+            CollectionViewDataGrid.ItemsSource = null;
+            RefreshCollection(_items2, CollectionViewTime, () => CollectionViewDataGrid.ItemsSource = _collectionView);
         }
 
         private void Button_Click_2(object sender, RoutedEventArgs e)
