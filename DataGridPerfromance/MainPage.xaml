@@ -53,7 +53,7 @@
             </sdk:DataGrid>
         </Grid>
 
-        <Grid Grid.Row="1" Grid.Column="1">
+        <!--<Grid Grid.Row="1" Grid.Column="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
@@ -107,6 +107,6 @@
                     <sdk:DataGridTextColumn Binding="{Binding Number}" Header="Number"/>
                 </sdk:DataGrid.Columns>
             </sdk:DataGrid>
-        </Grid>
+        </Grid>-->
     </Grid>
 </UserControl>
