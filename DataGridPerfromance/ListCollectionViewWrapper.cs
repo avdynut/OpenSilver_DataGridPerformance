@@ -14,10 +14,10 @@ namespace DataGridPerfromance.OpenSilver
 {
     public class ListCollectionViewWrapperFactory<T> : ICollectionViewFactory, IEnumerable<T>
     {
-        private readonly ICustomSort _customSort;
+        private readonly CustomSortFactory<T> _customSortFactory;
         private readonly EntitySet<T> _set;
 
-        public ListCollectionViewWrapperFactory(EntitySet<T> set, ICustomSort customSort)
+        public ListCollectionViewWrapperFactory(EntitySet<T> set, CustomSortFactory<T> customSortFactory)
         {
             if (set == null)
             {
@@ -25,12 +25,12 @@ namespace DataGridPerfromance.OpenSilver
             }
 
             _set = set;
-            _customSort = customSort;
+            _customSortFactory = customSortFactory;
         }
 
         public ICollectionView CreateView()
         {
-            return new ListCollectionViewWrapper(_set, _customSort);
+            return new ListCollectionViewWrapper(_set, _customSortFactory);
         }
 
         public IEnumerator<T> GetEnumerator()
@@ -45,40 +45,76 @@ namespace DataGridPerfromance.OpenSilver
 
         private class ListCollectionViewWrapper : ICollectionView
         {
+            private static readonly Type _listCollectionViewType;
             private static readonly PropertyInfo _customSortProperty;
+            private static readonly MethodInfo _refreshOrDeferMethod;
 
             private readonly ICollectionView _baseView;
-            private readonly ICustomSort _customSort;
+            private readonly CustomSort<T> _customSort;
+            private SortDescriptionCollection _sort;
 
             static ListCollectionViewWrapper()
             {
-                _customSortProperty = new CollectionViewSource { Source = new List<int>() }
-                    .View
-                    .GetType()
-                    .GetProperty("CustomSort");
+                _listCollectionViewType = new CollectionViewSource { Source = new List<int>() }.View.GetType();
+                _customSortProperty = _listCollectionViewType.GetProperty("CustomSort");
+                _refreshOrDeferMethod = _listCollectionViewType.GetMethod("RefreshOrDefer", BindingFlags.Instance | BindingFlags.NonPublic);
 
                 if (_customSortProperty == null)
                 {
                     throw new InvalidOperationException("_customSortProperty is null !");
                 }
+
+                if (_refreshOrDeferMethod == null)
+                {
+                    throw new InvalidOperationException("_refreshOrDeferMethod is null !");
+                }
             }
 
-            public ListCollectionViewWrapper(EntitySet<T> set, ICustomSort customSort)
+            public ListCollectionViewWrapper(EntitySet<T> set, CustomSortFactory<T> customSortFactory)
             {
                 Debug.Assert(set != null);
 
                 ICollectionView view = set.CreateView();
 
                 Debug.Assert(view != null);
-                Debug.Assert(_customSortProperty.DeclaringType.IsAssignableFrom(view.GetType()));
+                Debug.Assert(_listCollectionViewType.IsAssignableFrom(view.GetType()));
 
                 _baseView = view;
-                _customSort = customSort;
+                _customSort = customSortFactory?.CreateCustomSort();
 
                 if (_customSort != null)
                 {
                     _customSortProperty.SetValue(_baseView, _customSort);
+                    _customSort.SetCollectionView(this);
                 }
+            }
+
+            private void SetSortDescriptions(SortDescriptionCollection descriptions)
+            {
+                if (_sort != null)
+                {
+                    ((INotifyCollectionChanged)_sort).CollectionChanged -= new NotifyCollectionChangedEventHandler(SortDescriptionsChanged);
+                }
+
+                _sort = descriptions;
+
+                if (_sort != null)
+                {
+                    Debug.Assert(_sort.Count == 0, "must be empty SortDescription collection");
+                    ((INotifyCollectionChanged)_sort).CollectionChanged += new NotifyCollectionChangedEventHandler(SortDescriptionsChanged);
+                }
+            }
+
+            private void SortDescriptionsChanged(object sender, NotifyCollectionChangedEventArgs e)
+            {
+                IEditableCollectionView view = _baseView as IEditableCollectionView;
+                if (view != null)
+                {
+                    if (view.IsAddingNew || view.IsEditingItem)
+                        throw new InvalidOperationException(string.Format("'{0}' is not allowed during an AddNew or EditItem transaction.", "Sorting"));
+                }
+
+                _refreshOrDeferMethod.Invoke(_baseView, Array.Empty<object>());
             }
 
             public CultureInfo Culture { get => _baseView.Culture; set => _baseView.Culture = value; }
@@ -89,7 +125,18 @@ namespace DataGridPerfromance.OpenSilver
 
             public bool CanFilter => _baseView.CanFilter;
 
-            public SortDescriptionCollection SortDescriptions => _customSort?.SortDescriptions ?? _baseView.SortDescriptions;
+            public SortDescriptionCollection SortDescriptions
+            {
+                get
+                {
+                    if (_customSort == null)
+                        return _baseView.SortDescriptions;
+
+                    if (_sort == null)
+                        SetSortDescriptions(new SortDescriptionCollection());
+                    return _sort;
+                }
+            }
 
             public bool CanSort => _baseView.CanSort;
 
@@ -200,28 +247,27 @@ namespace DataGridPerfromance.OpenSilver
         }
     }
 
-    public interface ICustomSort : IComparer
+    public abstract class CustomSortFactory<T>
     {
-        SortDescriptionCollection SortDescriptions { get; }
+        public abstract CustomSort<T> CreateCustomSort();
     }
 
-    public abstract class CustomSort<T> : ICustomSort
+    public abstract class CustomSort<T> : IComparer
     {
         private readonly IComparer _comparer;
-
-        public SortDescriptionCollection SortDescriptions { get; } = new SortDescriptionCollection();
+        private ICollectionView _view;
 
         public CustomSort()
         {
             _comparer = Comparer<T>.Create((x, y) =>
             {
                 var result = 0;
-                if (SortDescriptions.Count == 0)
+                if (_view == null || _view.SortDescriptions.Count == 0)
                 {
                     return result;
                 }
 
-                foreach (var sortDescription in SortDescriptions)
+                foreach (var sortDescription in _view.SortDescriptions)
                 {
                     result = CompareProperty(x, y, sortDescription.PropertyName);
 
@@ -238,6 +284,16 @@ namespace DataGridPerfromance.OpenSilver
 
                 return result;
             });
+        }
+
+        public void SetCollectionView(ICollectionView view)
+        {
+            if (_view != null)
+            {
+                throw new InvalidOperationException("Cannot set view multiple times.");
+            }
+
+            _view = view;
         }
 
         public int Compare(object x, object y) => _comparer.Compare(x, y);

@@ -18,7 +18,7 @@ namespace DataGridPerfromance
 
             _collectionView = new CollectionViewSource
             {
-                Source = new ListCollectionViewWrapperFactory<Item>(new EntitySet<Item>(_items), new ItemSort())
+                Source = new ListCollectionViewWrapperFactory<Item>(new EntitySet<Item>(_items), new ItemSortFactory())
             }.View;
             _collectionView.SortDescriptions.Add(new SortDescription("Number", ListSortDirection.Descending));
             MyDataGrid.ItemsSource = _collectionView;
@@ -48,6 +48,14 @@ namespace DataGridPerfromance
                 default:
                     return 0;
             }
+        }
+    }
+
+    public class ItemSortFactory : CustomSortFactory<Item>
+    {
+        public override CustomSort<Item> CreateCustomSort()
+        {
+            return new ItemSort();
         }
     }
 }
