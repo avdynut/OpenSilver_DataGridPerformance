@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="OpenSilver" Version="1.0.0-private-2022-05-23-121732-65aefd7f" />
+    <PackageReference Include="OpenSilver" Version="1.0.0-private-2022-06-03-114851-77f694e1" />
   </ItemGroup>
 
   <ItemGroup>
@@ -22,6 +22,7 @@
   <ItemGroup>
     <Compile Include="App.xaml.cs" />
     <Compile Include="Item.cs" />
+    <Compile Include="ListCollectionViewWrapper.cs" />
     <Compile Include="MainPage.xaml.cs" />
   </ItemGroup>
   

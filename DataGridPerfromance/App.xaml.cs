@@ -21,12 +21,12 @@ namespace DataGridPerfromance
             Trace.Listeners.Add(new TextWriterTraceListener(Console.Out));
             Trace.AutoFlush = true;
 
-            if (OpenSilver.Interop.IsRunningInTheSimulator)
-            {
-                var logsFolder = "Logs";
-                Directory.CreateDirectory(logsFolder);
-                Trace.Listeners.Add(new TextWriterTraceListener(Path.Combine(logsFolder, $"{DateTime.Today:yyyy-MM-dd}.log")));
-            }
+            //if (OpenSilver.Interop.IsRunningInTheSimulator)
+            //{
+            //    var logsFolder = "Logs";
+            //    Directory.CreateDirectory(logsFolder);
+            //    Trace.Listeners.Add(new TextWriterTraceListener(Path.Combine(logsFolder, $"{DateTime.Today:yyyy-MM-dd}.log")));
+            //}
 #endif
         }
 

@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using DataGridPerfromance.OpenSilver;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
@@ -15,7 +16,11 @@ namespace DataGridPerfromance
         {
             InitializeComponent();
 
-            _collectionView = new CollectionViewSource { Source = _items }.View;
+            _collectionView = new CollectionViewSource
+            {
+                Source = new ListCollectionViewWrapperFactory<Item>(new EntitySet<Item>(_items), new ItemSort())
+            }.View;
+            _collectionView.SortDescriptions.Add(new SortDescription("Number", ListSortDirection.Descending));
             MyDataGrid.ItemsSource = _collectionView;
         }
 
@@ -27,7 +32,22 @@ namespace DataGridPerfromance
                 _items.Add(new Item { Number = i, Name = $"Name {i}" });
             }
             _collectionView.Refresh();
-            //_collectionView.Refresh();
+        }
+    }
+
+    public class ItemSort : CustomSort<Item>
+    {
+        protected override int CompareProperty(Item x, Item y, string propertyName)
+        {
+            switch (propertyName)
+            {
+                case "Number":
+                    return x.Number.CompareTo(y.Number);
+                case "Name":
+                    return x.Name.CompareTo(y.Name);
+                default:
+                    return 0;
+            }
         }
     }
 }
