@@ -6,7 +6,6 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
-using System.Linq;
 using System.Reflection;
 using System.Windows.Data;
 
@@ -14,33 +13,33 @@ namespace DataGridPerfromance.OpenSilver
 {
     public class ListCollectionViewWrapperFactory<T> : ICollectionViewFactory, IEnumerable<T>
     {
-        private readonly CustomSortFactory<T> _customSortFactory;
-        private readonly EntitySet<T> _set;
+        private readonly CustomSort<T> _customSort;
+        private readonly IEnumerable<T> _collection;
 
-        public ListCollectionViewWrapperFactory(EntitySet<T> set, CustomSortFactory<T> customSortFactory)
+        public ListCollectionViewWrapperFactory(IEnumerable<T> collection, CustomSort<T> customSort)
         {
-            if (set == null)
+            if (collection == null)
             {
-                throw new ArgumentNullException(nameof(set));
+                throw new ArgumentNullException(nameof(collection));
             }
 
-            _set = set;
-            _customSortFactory = customSortFactory;
+            _collection = collection;
+            _customSort = customSort;
         }
 
         public ICollectionView CreateView()
         {
-            return new ListCollectionViewWrapper(_set, _customSortFactory);
+            return new ListCollectionViewWrapper(_collection, _customSort);
         }
 
         public IEnumerator<T> GetEnumerator()
         {
-            return _set.GetEnumerator();
+            return _collection.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return _set.GetEnumerator();
+            return _collection.GetEnumerator();
         }
 
         private class ListCollectionViewWrapper : ICollectionView
@@ -70,17 +69,12 @@ namespace DataGridPerfromance.OpenSilver
                 }
             }
 
-            public ListCollectionViewWrapper(EntitySet<T> set, CustomSortFactory<T> customSortFactory)
+            public ListCollectionViewWrapper(IEnumerable<T> collection, CustomSort<T> customSort)
             {
-                Debug.Assert(set != null);
+                Debug.Assert(collection != null);
 
-                ICollectionView view = set.CreateView();
-
-                Debug.Assert(view != null);
-                Debug.Assert(_listCollectionViewType.IsAssignableFrom(view.GetType()));
-
-                _baseView = view;
-                _customSort = customSortFactory?.CreateCustomSort();
+                _baseView = new CollectionViewSource { Source = collection }.View;
+                _customSort = customSort;
 
                 if (_customSort != null)
                 {
@@ -247,11 +241,6 @@ namespace DataGridPerfromance.OpenSilver
         }
     }
 
-    public abstract class CustomSortFactory<T>
-    {
-        public abstract CustomSort<T> CreateCustomSort();
-    }
-
     public abstract class CustomSort<T> : IComparer
     {
         private readonly IComparer _comparer;
@@ -299,30 +288,5 @@ namespace DataGridPerfromance.OpenSilver
         public int Compare(object x, object y) => _comparer.Compare(x, y);
 
         protected abstract int CompareProperty(T x, T y, string propertyName);
-    }
-
-    public sealed class EntitySet<TEntity> : ICollectionViewFactory, IEnumerable<TEntity>
-    {
-        private readonly IEnumerable<TEntity> items;
-
-        public EntitySet(IEnumerable<TEntity> items)
-        {
-            this.items = items;
-        }
-
-        public ICollectionView CreateView()
-        {
-            return new CollectionViewSource { Source = items }.View;
-        }
-
-        public IEnumerator<TEntity> GetEnumerator()
-        {
-            return Enumerable.Empty<TEntity>().GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
     }
 }
