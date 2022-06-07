@@ -13,6 +13,7 @@
             <ColumnDefinition/>
             <ColumnDefinition/>
             <ColumnDefinition/>
+            <ColumnDefinition/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -21,7 +22,7 @@
         <TextBox Name="CountTextBox"
                  Grid.Row="0"
                  Grid.Column="0"
-                 Grid.ColumnSpan="3"
+                 Grid.ColumnSpan="4"
                  MinWidth="200"
                  HorizontalAlignment="Center"
                  Text="50"/>
@@ -63,10 +64,14 @@
             <TextBlock Grid.Row="0"
                        HorizontalAlignment="Center"
                        Text="CollectionView Observable"/>
-            <Button Grid.Row="1"
-                    HorizontalAlignment="Center"
-                    Click="Button_Click_1"
-                    Content="Load"/>
+            <StackPanel Grid.Row="1"
+                        HorizontalAlignment="Center"
+                        Orientation="Horizontal">
+                <Button Click="Button_Click_1" Content="Load"/>
+                <Button Click="Button_Click_4"
+                        Content="Refresh"
+                        Tag="{Binding ElementName=CollectionViewDataGrid}"/>
+            </StackPanel>
             <TextBlock x:Name="CollectionViewTime"
                        Grid.Row="2"
                        HorizontalAlignment="Center"
@@ -91,15 +96,51 @@
             <TextBlock Grid.Row="0"
                        HorizontalAlignment="Center"
                        Text="CollectionView List + Refresh()"/>
-            <Button Grid.Row="1"
-                    HorizontalAlignment="Center"
-                    Click="Button_Click_2"
-                    Content="Load"/>
+            <StackPanel Grid.Row="1"
+                        HorizontalAlignment="Center"
+                        Orientation="Horizontal">
+                <Button Click="Button_Click_2" Content="Load"/>
+                <Button Click="Button_Click_4"
+                        Content="Refresh"
+                        Tag="{Binding ElementName=CollectionViewListDataGrid}"/>
+            </StackPanel>
             <TextBlock x:Name="CollectionViewListTime"
                        Grid.Row="2"
                        HorizontalAlignment="Center"
                        Text=" "/>
             <sdk:DataGrid x:Name="CollectionViewListDataGrid"
+                          Grid.Row="3"
+                          AutoGenerateColumns="False">
+                <sdk:DataGrid.Columns>
+                    <sdk:DataGridTextColumn Binding="{Binding Name}" Header="Name"/>
+                    <sdk:DataGridTextColumn Binding="{Binding Number}" Header="Number"/>
+                </sdk:DataGrid.Columns>
+            </sdk:DataGrid>
+        </Grid>
+
+        <Grid Grid.Row="1" Grid.Column="3">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <TextBlock Grid.Row="0"
+                       HorizontalAlignment="Center"
+                       Text="CollectionView Observable Detach/Attach"/>
+            <StackPanel Grid.Row="1"
+                        HorizontalAlignment="Center"
+                        Orientation="Horizontal">
+                <Button Click="Button_Click_3" Content="Load"/>
+                <Button Click="Button_Click_4"
+                        Content="Refresh"
+                        Tag="{Binding ElementName=CollectionViewAttachDetachDataGrid}"/>
+            </StackPanel>
+            <TextBlock x:Name="CollectionViewAttachDetachTime"
+                       Grid.Row="2"
+                       HorizontalAlignment="Center"
+                       Text=" "/>
+            <sdk:DataGrid x:Name="CollectionViewAttachDetachDataGrid"
                           Grid.Row="3"
                           AutoGenerateColumns="False">
                 <sdk:DataGrid.Columns>
